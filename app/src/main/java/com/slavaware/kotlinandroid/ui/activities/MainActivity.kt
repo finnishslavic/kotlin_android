@@ -9,10 +9,12 @@ import com.slavaware.kotlinandroid.R
 import com.slavaware.kotlinandroid.data.ForecastResult
 import com.slavaware.kotlinandroid.domain.Command
 import com.slavaware.kotlinandroid.domain.ForecastDataMapper
+import com.slavaware.kotlinandroid.domain.model.Forecast
 import com.slavaware.kotlinandroid.domain.model.ForecastList
 import com.slavaware.kotlinandroid.ui.adapters.ForecastListAdapter
 import org.jetbrains.anko.async
 import org.jetbrains.anko.find
+import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 import java.net.URL
 
@@ -28,7 +30,11 @@ class MainActivity : AppCompatActivity() {
         async() {
             val result = RequestForecastCommand("94110").execute()
             uiThread {
-                forecastList.adapter = ForecastListAdapter(result)
+                forecastList.adapter = ForecastListAdapter(result, object : ForecastListAdapter.OnItemClickListener {
+                    override fun invoke(forecast: Forecast) {
+                        toast(forecast.date)
+                    }
+                })
             }
         }
     }
