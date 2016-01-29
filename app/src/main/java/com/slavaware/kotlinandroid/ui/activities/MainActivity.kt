@@ -9,7 +9,6 @@ import com.slavaware.kotlinandroid.R
 import com.slavaware.kotlinandroid.data.ForecastResult
 import com.slavaware.kotlinandroid.domain.Command
 import com.slavaware.kotlinandroid.domain.ForecastDataMapper
-import com.slavaware.kotlinandroid.domain.model.Forecast
 import com.slavaware.kotlinandroid.domain.model.ForecastList
 import com.slavaware.kotlinandroid.ui.adapters.ForecastListAdapter
 import org.jetbrains.anko.async
@@ -30,18 +29,14 @@ class MainActivity : AppCompatActivity() {
         async() {
             val result = RequestForecastCommand("94110").execute()
             uiThread {
-                forecastList.adapter = ForecastListAdapter(result, object : ForecastListAdapter.OnItemClickListener {
-                    override fun invoke(forecast: Forecast) {
-                        toast(forecast.date)
-                    }
-                })
+                forecastList.adapter = ForecastListAdapter(result) { toast(it.date) }
             }
         }
     }
 
 }
 
-public class ForecastRequest(val zipCode: String) {
+class ForecastRequest(val zipCode: String) {
 
     companion object {
         private val APP_ID = "f670c5836b940e03068ca297fd339c43"
@@ -49,13 +44,13 @@ public class ForecastRequest(val zipCode: String) {
         private val COMPLETE_URL = "$URL&APPID=$APP_ID&q="
     }
 
-    public fun execute(): ForecastResult {
+    fun execute(): ForecastResult {
         val forecastJsonStr = URL(COMPLETE_URL + zipCode).readText()
         return Gson().fromJson(forecastJsonStr, ForecastResult::class.java)
     }
 }
 
-public class RequestForecastCommand(val zipCode: String) : Command<ForecastList> {
+class RequestForecastCommand(private val zipCode: String) : Command<ForecastList> {
     override fun execute(): ForecastList {
         val forecastRequest = ForecastRequest(zipCode)
         return ForecastDataMapper().convertFromDataModel(forecastRequest.execute())

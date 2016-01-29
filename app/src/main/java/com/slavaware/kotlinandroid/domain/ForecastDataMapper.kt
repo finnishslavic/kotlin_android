@@ -7,9 +7,9 @@ import java.text.DateFormat
 import java.util.*
 import com.slavaware.kotlinandroid.domain.model.Forecast as ModelForecast
 
-public class ForecastDataMapper {
+class ForecastDataMapper {
 
-    public fun convertFromDataModel(forecast: ForecastResult): ForecastList {
+    fun convertFromDataModel(forecast: ForecastResult): ForecastList {
         return ForecastList(forecast.city.name, forecast.city.country, convertForecastToDomainList(forecast.list))
     }
 
