@@ -1,4 +1,4 @@
-package com.slavaware.kotlinandroid.ui.utils
+package com.slavaware.kotlinandroid.extensions
 
 import android.content.Context
 import android.view.View
